@@ -1,0 +1,94 @@
+{% extends "uni_checker/base.html" %}
+{% block content %}
+
+
+
+
+
+<!--Block with all content -->
+    <div class="col-md-8 col-lg-9 content-block">
+{% if item_list %}
+<!--  Cycle for Items output -->
+      {% for item in item_list %}
+
+<!--  Div with Item -->
+      <div class="content-holder">
+          <div class="row item-name">
+            <h4 class="col">{{ item.item_name }}</h4> 
+            <hr>
+          </div>
+          
+<!--      Cycle for Rows in Item -->
+          {% for row in item.row_set.all %}
+          {% if row.is_completed is True %}
+            <div class='row_object text-muted row-striped '>
+          {% else %}
+            <div class='row_object'>
+          {% endif %}
+              <div class=" text-center">{{row.row_name}}</div>
+              <div >
+                  <form class="form-compl" action="{% url 'uni_checker:row_bool_change' row.id %}" method="POST">
+                     {% csrf_token %}
+                     <input class="btn btn-sm btn-light
+                     {% if row.is_completed is True %}
+                     text-muted
+                     {%endif%}
+                     " type="submit" value="{{row.is_completed}}"/>
+                  </form>
+              </div>
+              {% if item.has_deadline is True %}
+              <div class=" text-center">{{row.remaining_days}}</div>
+              {% endif %}
+              
+          </div>
+          <hr>
+          {% endfor %}
+
+<!--      Progress -->
+          <div class="row progress progress-item " >
+            
+            <div class='progress-bar ' style="width: {{item.get_progress}}%">{{item.get_progress}}%</div>
+          </div>
+
+<!--      Buttons -->
+          <div class='row button-holder'>
+            <div class="button-div">
+              <a class="btn  btn-dark btn-sm" href="{% url 'uni_checker:item_update' item.id %}">Edit
+              </a>
+            </div>
+            <div style="width: 10%; "></div>
+            <div class="button-div">
+              <form class="" action="{% url 'uni_checker:item_delete' item.id %}" method="POST">
+                   {% csrf_token %}
+                   <input class="btn  btn-sm btn-danger" type="submit" value="Delete"/>
+              </form>
+            </div>
+          </div>
+      </div>
+
+
+      {% endfor %}
+    
+
+
+{% else %}
+    <p>No items are available.</p>
+{% endif %}
+    </div>
+    <div class="col-md-4 col-lg-3">
+        <div class="content-section">
+            <h3>Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item-light" href="{% url 'uni_checker:new_item' %}">New Item</a>
+                    <a class="list-group-item list-group-item-light" href="{% url 'uni_checker:exam_mode' %}">Exam Mode</a>
+                    <div class="progress list-group-item-light progress-overall">
+                      <div class='progress-bar  progress-bar-striped' style="width: {{overall_progress}}%">{{ overall_progress }}%</div>
+                  </div>
+                </ul>
+            </p>
+        </div>
+    </div>
+
+
+{% endblock %}

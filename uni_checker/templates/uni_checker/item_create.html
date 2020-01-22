@@ -1,0 +1,35 @@
+{% extends "uni_checker/base.html" %}
+{% block content %}
+
+
+{% load crispy_forms_tags %}
+<div class="col-md-8 col-lg-9 content-block">
+	<div class="content-holder row">
+		<div class="col-9">
+			<form class="uniForm " method="post">
+
+
+
+				<div class="item-form">
+					{% csrf_token %}
+					{% crispy form  %}
+				</div>
+
+				{% crispy formset helper %}
+
+
+
+			</form>
+			<button class="btn btn-success add-form-row">Add Row</button>
+		</div>
+		<div class="col-3 delete-buttons">
+			{% for row in item.row_set.all %}
+				<form class="delete-container" action="{% url 'uni_checker:row_delete' row.id %}" method="POST">
+                   {% csrf_token %}
+                   <input class="btn  btn-sm btn-danger" type="submit" value="Delete"/>
+            	</form>
+			{% endfor %}	
+		</div>
+	</div>
+</div>
+{% endblock %}

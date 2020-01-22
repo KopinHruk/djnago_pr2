@@ -1,0 +1,85 @@
+{% extends "uni_checker/base.html" %}
+{% block content %}
+
+
+
+{% if item_list %}
+
+<!--Block with all content -->
+    <div class="col-md-8 col-lg-9 content-block">
+
+<!--  Cycle for Items output -->
+      {% for item in item_list %}
+
+<!--  Div with Item -->
+      <div class="content-holder">
+          <div class="row item-name">
+            <h4 class="col">{{ item.item_name }}</h4> 
+            <hr>
+          </div>
+          
+
+            <div class='row_object'>
+
+              <div>Nuber of questions</div>
+              <div>{{item.number_of_questions}}</div>    
+          </div>
+          <div class='row_object'>
+
+              <div>Read questions</div>
+              <div>{{item.number_of_read_questions}}</div>    
+          </div>
+
+          <hr>
+
+<!--      Progress -->
+          <div class="row progress progress-item " >
+            
+            <div class='progress-bar ' style="width: {{item.get_exam_progress}}%">{{item.get_exam_progress}}%</div>
+          </div>
+
+<!--      Buttons -->
+          <div class='row button-holder'>
+            <div class="button-div">
+               <form class="" action="{% url 'uni_checker:read_question_decrease' item.id %}" method="POST">
+                   {% csrf_token %}
+                   <input class="btn  btn-sm btn-dark" type="submit" value="-"/>
+              </form>
+            </div>
+            <div style="width: 10%"></div>
+            <div class="button-div">
+              <form class="" action="{% url 'uni_checker:read_question_increase' item.id %}" method="POST">
+                   {% csrf_token %}
+                   <input class="btn  btn-sm btn-dark" type="submit" value="+"/>
+              </form>
+            </div>
+
+          </div>
+      </div>
+
+
+      {% endfor %}
+    </div>
+
+
+{% else %}
+    <p>No items are available.</p>
+{% endif %}
+
+    <div class="col-md-4 col-lg-3">
+        <div class="content-section">
+            <h3>Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item-light" href="{% url 'uni_checker:new_item' %}">New Item</a>
+                    <a class="list-group-item list-group-item-light" href="{% url 'uni_checker:main_editor' %}">Home</a>
+                    <div class="progress list-group-item-light progress-overall">
+                      <div class='progress-bar  progress-bar-striped' style="width: {{overall_exam_progress}}%">{{ overall_exam_progress }}%</div>
+                  </div>
+                </ul>
+            </p>
+        </div>
+    </div>
+
+
+{% endblock %}

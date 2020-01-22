@@ -1,0 +1,17 @@
+{% extends "uni_checker/base.html" %}
+{% block content %}
+
+
+{% load crispy_forms_tags %}
+<div class="col-md-8 col-lg-9 content-block">
+	<div class="content-holder">
+		<form class="uniForm" method="post">
+		    {% csrf_token %}
+
+			{% crispy form   %}
+			{% crispy formset helper %}
+		</form>
+	</div>
+</div>
+
+{% endblock %}
